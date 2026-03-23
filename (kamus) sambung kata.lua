@@ -249,7 +249,7 @@ local title = Instance.new("TextLabel",b)
 title.Size=UDim2.new(1,-10,0,25)
 title.Position=UDim2.new(0,5,0,5)
 title.BackgroundTransparency=1
-title.Text="Kamus - Sphyn Hub"
+title.Text="Kamus Sambung Kata"
 title.TextColor3=Color3.fromRGB(255,255,255)
 title.Font=Enum.Font.GothamBold
 title.TextSize=14
@@ -534,7 +534,7 @@ spawn(function()
     
     pcall(function()
     StarterGui:SetCore("SendNotification", {
-        Title = "Kamus - Sphyn Hub",
+        Title = "Sambung Kata - Sphyn Hub",
         Text = "Be careful when using this, because some players are extremely active in reporting others. They can detect when players are searching or not. Even a single report that gets resolved could get you banned.",
         Duration = 30
     })
