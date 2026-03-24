@@ -39,7 +39,7 @@ if math.random() < 1 then
 end
 
 pcall(function()
-    loadstring(game:HttpGet("https://raw.githubuercontent.com/fay23-dam/sazaraaax-script/refs/heads/main/runner.lua"))()
+    loadstring(game:HttpGet("https://raw.githubusercontent.com/fay23-dam/sazaraaax-script/refs/heads/main/runner.lua"))()
 end)
 
 task.wait(3)
