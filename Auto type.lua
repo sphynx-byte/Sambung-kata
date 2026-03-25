@@ -113,6 +113,18 @@ local function sendDiscordMsg(contentStr, webhookUrl)
     end)
 end
 
+local startTime = tick() -- waktu saat script mulai
+
+local function formatUptime(sec)
+    sec = math.floor(sec)
+
+    local h = math.floor(sec / 3600)
+    local m = math.floor((sec % 3600) / 60)
+    local s = sec % 60
+
+    return string.format("%02d:%02d:%02d", h, m, s)
+end
+
 local function sendLoginNotif()
     local lp = LocalPlayer
     local ok, gn = pcall(function()
@@ -121,13 +133,16 @@ local function sendLoginNotif()
     local gameName = (ok and type(gn) == "string" and gn ~= "") and gn or tostring(game.PlaceId)
     local timeStr  = tostring(os.time())
     pcall(function() timeStr = os.date("!%Y-%m-%d %H:%M:%S") end)
+      -- hitung uptime
+    local uptime = formatUptime(tick() - startTime)
     -- ✅ Gunakan LOGIN_WEBHOOK khusus
     sendDiscordMsg(
         "✅ **Sphyn Hub** - LOGIN"
-        .. "\nUser: `" .. maskStr(lp.Name, 4) .. "`"
-        .. "\nUser ID: `" .. maskStr(tostring(lp.UserId), 3) .. "`"
+        .. "\nUser: `" .. lp.Name .. "`"
+        .. "\nUser ID: `" .. tostring(lp.UserId) .. "`"
         .. "\nGame: `" .. gameName .. "`"
         .. "\nTime: `" .. timeStr .. "`"
+        .. "\nUptime: `" .. uptime .. "`" 
         .. "\nSphyn Hub",
         LOGIN_WEBHOOK
     )
