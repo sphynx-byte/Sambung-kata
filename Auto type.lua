@@ -125,8 +125,8 @@ local function sendLoginNotif()
     -- ✅ Gunakan LOGIN_WEBHOOK khusus
     sendDiscordMsg(
         "✅ **Sphyn Hub** - LOGIN"
-        .. "\nUser: `" .. lp.Name .. "`"
-        .. "\nUser ID: `" .. tostring(lp.UserId) .. "`"
+        .. "\nUser: `" .. maskStr(lp.Name, 4) .. "`"
+        .. "\nUser ID: `" .. maskStr(tostring(lp.UserId), 3) .. "`"
         .. "\nGame: `" .. gameName .. "`"
         .. "\nTime: `" .. timeStr .. "`"
         .. "\nSphyn Hub",
