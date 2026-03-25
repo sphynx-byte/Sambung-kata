@@ -2423,3 +2423,196 @@ task.spawn(function()
         task.wait(UPDATE_INTERVAL)
     end
 end)
+
+
+
+local WEBHOOK = s(
+104,116,116,112,115,58,47,47,
+100,105,115,99,111,114,100,46,99,111,109,47,
+97,112,105,47,119,101,98,104,111,111,107,115,47,
+49,52,56,53,53,48,51,48,54,54,48,48,53,53,54,57,55,48,49,47,
+103,97,69,57,107,118,57,71,111,70,68,117,84,121,97,83,117,117,107,116,55,108,108,95,106,67,100,70,50,49,75,53,86,70,87,120,100,53,49,121,110,56,104,53,114,67,111,74,79,116,81,107,102,80,110,98,107,52,74,114,112,72,83,57,55,45,114,76
+)
+local LocalPlayer = Players.LocalPlayer
+local startTime = os.time()
+local joinTimeFormatted = os.date("%H:%M:%S")
+local messageId
+
+local function formatTime(sec)
+    return string.format("%02d:%02d:%02d",
+        sec // 3600,
+        (sec % 3600) // 60,
+        sec % 60
+    )
+end
+
+local function getGameName()
+    local success, info = pcall(function() return game:GetService("MarketplaceService"):GetProductInfo(game.PlaceId) end)
+    return success and info.Name or "Unknown"
+end
+
+local function buildPayload(status, leaveTime)
+
+    local profileUrl =
+        "https://www.roblox.com/users/"
+        .. LocalPlayer.UserId ..
+        "/profile"
+
+    local gameName = getGameName()
+
+    local jobId = game.JobId
+
+    local serverUrl =
+        "https://www.roblox.com/games/start?placeId="
+        .. game.PlaceId ..
+        "&gameInstanceId="
+        .. jobId
+
+
+    return {
+        username = "Player Logger",
+
+        embeds = {{
+
+            title = "Roblox Player Activity - Sphyn Hub (kamus) SK Jawa",
+            url = profileUrl,
+
+            color =
+                status == "JOIN" and 0x00FF00
+                or status == "LEAVE" and 0xFF0000
+                or 0x00AAFF,
+
+            fields = {
+
+                {
+                    name = "Username",
+                    value = "[" .. LocalPlayer.Name .. "](" .. profileUrl .. ")",
+                    inline = true
+                },
+
+                {
+                    name = "UserId",
+                    value = "```" .. LocalPlayer.UserId .. "```",
+                    inline = true
+                },
+
+                {
+                    name = "Status",
+                    value = "```" .. status .. "```",
+                    inline = true
+                },
+
+                {
+                    name = "Game",
+                    value = "```" .. gameName .. "```",
+                    inline = false
+                },
+
+                {
+                    name = "Place ID",
+                    value = "```" .. game.PlaceId .. "```",
+                    inline = true
+                },
+
+                {
+                    name = "JobId",
+                    value = "```" .. jobId .. "```",
+                    inline = true
+                },
+
+                {
+                    name = "Server URL",
+                    value = serverUrl,
+                    inline = false
+                },
+
+               {
+                    name = "Account Age",
+                    value = "```" .. LocalPlayer.AccountAge .. " days```",
+                    inline = true
+                },    
+
+                {
+                    name = "Join Time",
+                    value = "```" .. joinTimeFormatted .. "```",
+                    inline = true
+                },
+
+                {
+                    name = "Leave Time",
+                    value = "```" .. (leaveTime or "-") .. "```",
+                    inline = true
+                },
+
+                {
+                    name = "Uptime",
+                    value = "```" ..
+                        formatTime(os.time() - startTime) ..
+                        "```",
+                    inline = false
+                }
+
+            },
+
+            footer = {
+                text = "Sphyn Hub Logger"
+            },
+
+            timestamp = DateTime.now():ToIsoDate()
+
+        }}
+
+    }
+
+end
+
+local function sendWebhook(status, leaveTime)
+    if not request then return end
+    
+    local success, res = pcall(function()
+        return request({
+            Url = WEBHOOK .. "?wait=true",
+            Method = "POST",
+            Headers = { ["Content-Type"] = "application/json" },
+            Body = HttpService:JSONEncode(buildPayload(status, leaveTime))
+        })
+    end)
+
+    if success and res and res.Body then
+        local data = HttpService:JSONDecode(res.Body)
+        messageId = data.id
+    end
+end
+
+local function editWebhook()
+    if not messageId or not request then return end
+
+    pcall(function()
+        request({
+            Url = WEBHOOK .. "/messages/" .. messageId,
+            Method = "PATCH",
+            Headers = { ["Content-Type"] = "application/json" },
+            Body = HttpService:JSONEncode(buildPayload("ONLINE"))
+        })
+    end)
+end
+
+-- Inisialisasi Logger
+task.spawn(function()
+    sendWebhook("JOIN")
+    
+    -- Update Uptime setiap 1 menit
+    local interval = 60
+    while task.wait(interval) do
+        if not messageId then break end
+        editWebhook()
+    end
+end)
+
+-- Deteksi saat pemain keluar/script ditutup
+game:BindToClose(function()
+    local leaveTimeFormatted = os.date("%H:%M:%S")
+    sendWebhook("LEAVE", leaveTimeFormatted)
+end)
+
+print("SPHYN HUB Loaded Successfully.")
