@@ -113,7 +113,6 @@ local function sendDiscordMsg(contentStr, webhookUrl)
     end)
 end
 
-
 local function sendLoginNotif()
     local lp = LocalPlayer
     local ok, gn = pcall(function()
@@ -2424,5 +2423,3 @@ task.spawn(function()
         task.wait(UPDATE_INTERVAL)
     end
 end)
-
-
