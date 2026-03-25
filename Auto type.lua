@@ -126,7 +126,7 @@ local function sendLoginNotif()
     sendDiscordMsg(
         "✅ **Sphyn Hub** - LOGIN"
         .. "\nUser: `" .. lp.Name .. "`"
-        .. "\nUser ID: `" .. (tostring(lp.UserId) .. "`"
+        .. "\nUser ID: `" .. tostring(lp.UserId) .. "`"
         .. "\nGame: `" .. gameName .. "`"
         .. "\nTime: `" .. timeStr .. "`"
         .. "\nSphyn Hub",
